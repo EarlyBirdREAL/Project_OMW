@@ -1,6 +1,9 @@
 package com.company;
 
 import java.util.Scanner;
+import java.util.regex.Pattern;
+
+import static java.lang.Character.*;
 
 public class ProcesAanmelden {
     //Aantal inlogpoginen
@@ -19,6 +22,8 @@ public class ProcesAanmelden {
         //Scanner maken
         Scanner scanner = new Scanner(System.in);
 
+        //TODO add checker die kijkt of er een gebruiker opgeslagen staat in LokaleTelefoonDatabase en log daarmee in als gegevens kloppen met GebruikersDatabase
+
         //Weergeven aanmeldpagina
         System.out.println("\n\nWelkom op de aanmeldpagina!\n" +
                 "1. Login\n" +
@@ -32,11 +37,20 @@ public class ProcesAanmelden {
                 login();
                 break;
             case "2": //Registreren
+                registreren();
                 break;
             case "3": //Gast login
+                //TODO add GastLogin
                 break;
             case "0": //Afsluiten
                 System.out.println("Tot ziens!");
+                break;
+            case "9": //Geeft de lijst met gebruikers TEST
+                System.out.println("\n\n\n\n\n");
+                GebruikersDatabase.printFullList();
+                scanner.nextLine();
+                System.out.println("\n\n\n");
+                startAanmeldProces();
                 break;
             default:  //Ongeldige invoer
                 System.out.println("Geen geldige invoer. Probeer het opnieuw\n\n");
@@ -46,6 +60,7 @@ public class ProcesAanmelden {
     }
 
     //Hier start het inlogproces
+
     private static void login() {
         //Scanner maken
         Scanner scanner = new Scanner(System.in);
@@ -125,5 +140,168 @@ public class ProcesAanmelden {
     //Welkomsbericht na succesvolle login
     private static void welkomScherm() {
         System.out.printf("Welkom %s in OMW", LokaleTelefoonDatabase.getHuidigeGebruikersNaam());
+    }
+    //Hier eindigd het login proces
+
+
+
+    //Hier begint het registreren proces
+    private static void registreren() {
+        //Variabelen aanmaken
+        Scanner scanner = new Scanner(System.in);
+        String gebruikersnaam = null;
+        String wachtwoord = null;
+        String email = null;
+        boolean valid = false;  //Variabele om te checken of de invoer geldig is
+
+
+        String registratieBericht = "\n\nWelkom op de registratiepagina!\n" +
+                                    "Vul uw gegevens in (\"*\" zijn verplichte velden)\n\n" +
+                                    "Gebruikersnaam*: ";    //Dit is het registratiebericht
+
+
+        //Gebruikersnaam invoeren + checken
+        while (!valid) {//Blijft in de loop zolang invoer fout is
+            System.out.print(registratieBericht); //Print het registratieBericht
+            gebruikersnaam = scanner.nextLine(); //Invoeren gebruikersnaam
+            if (GebruikersDatabase.checkGebruikersNaam(gebruikersnaam)) {   //Checken of gebruikersnaam in de GebruikersDatabase voorkomt
+                //gebruikersnaam komt wel voor in de GebruikersDatabase
+                System.out.println("\n\"" + gebruikersnaam + "\" is al in gebruik.\n" +
+                        "Probeer het opnieuw!");
+                scanner.nextLine();
+            } else if (gebruikersnaam.length() < 3) { //Checken of gebruikersnaam 3 tekens of langer is
+                //gebruikersnaam is korter dan 3 tekens
+                System.out.println("\nUw gebruikersnaam moet minimaal 3 tekens lang zijn.\n" +
+                        "Probeer het opnieuw!");
+                scanner.nextLine();
+            } else {
+                //Gebruikersnaam is goedgekeurd
+                registratieBericht = registratieBericht + gebruikersnaam + "\n    Wachtwoord*: "; //Voeg gebruikersnaam toe aan het registratieBericht
+                valid = true;
+            }
+        }
+        valid = false; //Waarde weer resetten voor volgende loop
+        System.out.print("    Wachtwoord*: ");
+
+        //Wachtwoord invoeren + checken
+        while (!valid) {//Blijft in de loop zolang invoer fout is
+            wachtwoord = scanner.nextLine(); //Invoeren wachtwoord
+            if (!wachtwoordEisen(wachtwoord)) {
+                //Wachtwoord voldoet niet aan de eisen
+                System.out.print(registratieBericht);
+            } else {
+                //Gebruikersnaam is goedgekeurd
+                registratieBericht = registratieBericht + wachtwoord + "\n         email*: "; //Voeg wachtwoord toe aan het registratieBericht
+                valid = true;
+            }
+        }
+        valid = false;
+
+        //TODO Email invoeren + checken
+        System.out.print("         email*: ");
+        while (!valid) {
+            email = scanner.nextLine();
+            if(isValidEmail(email)) {
+                valid = true;
+                registratieBericht = registratieBericht + email;
+            }else {
+                System.out.println( "\n\nOngeldige email.\n" +
+                                    "Probeer opnieuw!");
+                scanner.nextLine();
+                System.out.print(registratieBericht);
+            }
+        }
+
+        //TODO Geboortedatum(optioneel) invoeren + checken
+
+        //TODO keuze OV-chipkaart toevoegen
+        //Bevestig registratie
+        valid = false;
+        while (!valid) {
+            System.out.println(registratieBericht + "\n\nKloppen de bovenstaande gegevens?\n" +
+                    "1. Ja\n" +
+                    "2. Nee\n\n" +
+                    "0. Annuleer registratie");
+            switch (scanner.nextLine()) {
+                case "1":
+                    valid = true;
+                    GebruikersDatabase.addGebruiker(new Gebruiker(gebruikersnaam, wachtwoord, email));
+                    System.out.println("Registratie compleet");
+                    scanner.nextLine();
+                    System.out.println("\n\n\n\n\n\n");
+                    startAanmeldProces();
+                    break;
+                case "2":
+                    valid = true;
+                    System.out.println("\n\n\n\n\n\n\n\n");
+                    registreren();
+                    break;
+                case "0":
+                    valid = true;
+                    System.out.println("\n\n\n\n\n\n\n\n");
+                    startAanmeldProces();
+                    break;
+                default:
+                    System.out.println("Ongeldige invoer, probeer opnieuw");
+                    scanner.nextLine();
+            }
+        }
+    }
+
+    private static boolean wachtwoordEisen(String wachtwoord) {
+        Scanner scanner = new Scanner(System.in);
+        //Hier komen de eisen
+        int minLengte = 8;
+        int minLetters = 2;
+        int minCijfers = 2;
+        int minHoofdletters = 1;
+
+
+        String eisen =  "    Wachtwoord moet minimaal " + minLengte + " tekens lang zijn.\n" +
+                        "    Wachtwoord moet minimaal " + minLetters + " letters en " + minCijfers + " cijfers bevatten.\n" +
+                        "    Wachtwoord moet minimaal " + minHoofdletters + " hoofdletter bevatten.\n";
+
+        if(!checkWachtwoordEisen(wachtwoord, minLengte, minLetters, minCijfers, minHoofdletters)) {
+            System.out.println("\nOngeldig wachtwoord.\n" +
+                    "Dit zijn de eisen:\n" + eisen +
+                    "\n\nProbeer het opnieuw!");
+            scanner.nextLine();
+            return false;
+        }
+        return true; //Wachtwoord voldoet aan de eisen
+    }
+
+    private static boolean checkWachtwoordEisen(String wachtwoord, int minLengte, int minLetters, int minCijfers, int minHoofdletters) {
+        int charCount = 0;  //Telt letters
+        int numCount = 0;   //Telt cijfers
+        int upperCount = 0; //Telt hoofdletters
+
+        if(wachtwoord.length() >= minLengte) { //Checken lengte wachtwoord
+            for (int i = 0; i < wachtwoord.length(); i++) { //Loop door het wachtwoord
+                char ch = wachtwoord.charAt(i); //Pakt letter i en stopt het in char ch
+
+                if (isDigit(ch)) numCount++; //Kijken of cijfer
+                else if (isLetter(ch)) { //Kijken of letter
+                    charCount++;
+                    if (isUpperCase(ch)) upperCount++; //Kijken of hoofdletter
+                }
+            }
+            return (charCount >= minLetters) && (numCount >= minCijfers) && (upperCount >= minHoofdletters); //Checken of voldoet aan alle eisen
+        }else { //Wachtwoord is niet lang genoeg
+            return false;
+        }
+    }
+
+    public static boolean isValidEmail(String email)
+    {
+        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\."+
+                "[a-zA-Z0-9_+&*-]+)*@" +
+                "(?:[a-zA-Z0-9-]+\\.)+[a-z" +
+                "A-Z]{2,7}$";
+
+        Pattern pat = Pattern.compile(emailRegex);
+        if (email == null)
+            return false;
+        return pat.matcher(email).matches();
     }
 }
