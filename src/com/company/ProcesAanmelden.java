@@ -40,7 +40,8 @@ public class ProcesAanmelden {
                 registreren();
                 break;
             case "3": //Gast login
-                //TODO add GastLogin
+                LokaleTelefoonDatabase.setIsGast(true);
+                welkomScherm();
                 break;
             case "0": //Afsluiten
                 System.out.println("Tot ziens!");
@@ -77,7 +78,7 @@ public class ProcesAanmelden {
         String wachtwoord = scanner.nextLine();
 
         //Bevestiggen invoer
-        System.out.println( "1. Bevestig\n" +
+        System.out.println("\nKloppen de bovenstaande gegevens?\n1. Bevestig\n" +
                 "2. Probeer opnieuw\n\n" +
                 "0. Stop met inloggen");
         String bevestig = scanner.nextLine();
@@ -139,7 +140,7 @@ public class ProcesAanmelden {
 
     //Welkomsbericht na succesvolle login
     private static void welkomScherm() {
-        System.out.printf("Welkom %s in OMW", LokaleTelefoonDatabase.getHuidigeGebruikersNaam());
+        System.out.printf("\n\n\nWelkom %s in OMW", LokaleTelefoonDatabase.getHuidigeGebruikersNaam());
     }
     //Hier eindigd het login proces
 
@@ -197,7 +198,7 @@ public class ProcesAanmelden {
         }
         valid = false;
 
-        //TODO Email invoeren + checken
+        //Email invoeren + checken
         System.out.print("         email*: ");
         while (!valid) {
             email = scanner.nextLine();
