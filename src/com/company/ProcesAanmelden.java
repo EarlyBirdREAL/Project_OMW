@@ -49,6 +49,7 @@ public class ProcesAanmelden {
             case "9": //Geeft de lijst met gebruikers TEST
                 System.out.println("\n\n\n\n\n");
                 GebruikersDatabase.printFullList();
+                System.out.print("\n<Press ENTER to continue>");
                 scanner.nextLine();
                 System.out.println("\n\n\n");
                 startAanmeldProces();
@@ -87,6 +88,8 @@ public class ProcesAanmelden {
                 if(checkJuisteLogin(gebruikersnaam, wachtwoord)) { //Checken of combinatie gebruikersnaam en wachtwoord voorkomt in database
                     //Ingelogd
                     System.out.println("Correcte Login");
+                    System.out.print("\n<Press ENTER to continue>");
+                    scanner.nextLine();
                     welkomScherm(); //Ga naar welkom scherm
                 }else{
                     //Foute login
@@ -106,6 +109,8 @@ public class ProcesAanmelden {
                         System.out.println("U kunt niet meer inloggen voor 1 uur"); //Stoppen met login
                     }else{ //Wel pogingen over
                         System.out.println("Probeer het opnieuw");
+                        System.out.print("\n<Press ENTER to continue>");
+                        scanner.nextLine();
                         login(); //probeer opnieuw
                     }
                 }
@@ -169,11 +174,13 @@ public class ProcesAanmelden {
                 //gebruikersnaam komt wel voor in de GebruikersDatabase
                 System.out.println("\n\"" + gebruikersnaam + "\" is al in gebruik.\n" +
                         "Probeer het opnieuw!");
+                System.out.print("\n<Press ENTER to continue>");
                 scanner.nextLine();
             } else if (gebruikersnaam.length() < 3) { //Checken of gebruikersnaam 3 tekens of langer is
                 //gebruikersnaam is korter dan 3 tekens
                 System.out.println("\nUw gebruikersnaam moet minimaal 3 tekens lang zijn.\n" +
                         "Probeer het opnieuw!");
+                System.out.print("\n<Press ENTER to continue>");
                 scanner.nextLine();
             } else {
                 //Gebruikersnaam is goedgekeurd
@@ -208,6 +215,7 @@ public class ProcesAanmelden {
             }else {
                 System.out.println( "\n\nOngeldige email.\n" +
                                     "Probeer opnieuw!");
+                System.out.print("\n<Press ENTER to continue>");
                 scanner.nextLine();
                 System.out.print(registratieBericht);
             }
@@ -228,6 +236,7 @@ public class ProcesAanmelden {
                     valid = true;
                     GebruikersDatabase.addGebruiker(new Gebruiker(gebruikersnaam, wachtwoord, email));
                     System.out.println("Registratie compleet");
+                    System.out.print("\n<Press ENTER to continue>");
                     scanner.nextLine();
                     System.out.println("\n\n\n\n\n\n");
                     startAanmeldProces();
@@ -244,6 +253,7 @@ public class ProcesAanmelden {
                     break;
                 default:
                     System.out.println("Ongeldige invoer, probeer opnieuw");
+                    System.out.print("\n<Press ENTER to continue>");
                     scanner.nextLine();
             }
         }
@@ -266,6 +276,7 @@ public class ProcesAanmelden {
             System.out.println("\nOngeldig wachtwoord.\n" +
                     "Dit zijn de eisen:\n" + eisen +
                     "\n\nProbeer het opnieuw!");
+            System.out.print("\n<Press ENTER to continue>");
             scanner.nextLine();
             return false;
         }
