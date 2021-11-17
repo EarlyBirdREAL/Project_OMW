@@ -4,6 +4,9 @@ public class Main {
 
     public static void main(String[] args) {
         ProcesAanmelden.addGebruikersTest();
-        ProcesAanmelden.startAanmeldProces();
+        ProcesAanmelden.setHuidigeGebruiker("Piet", "Wachtwoord123");
+        while (true) {
+            ProcesAanmelden.startAanmeldProces();
+        }
     }
 }

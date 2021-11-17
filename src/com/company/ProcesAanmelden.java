@@ -17,47 +17,57 @@ public class ProcesAanmelden {
         GebruikersDatabase.addGebruiker(new Gebruiker("Vince", "OranjeKoek69", "vincenator@hotmail.com"));
     }
 
+    //Deze methode is om te testen. Zet deze in de main functie om de huidige gebruiker te setten in LokaleTelefoonDatabase
+    public static void setHuidigeGebruiker(String gebruikersNaam, String wachtwoord) {
+        LokaleTelefoonDatabase.setHuidigeGebruikersNaam(gebruikersNaam);
+        LokaleTelefoonDatabase.setHuidigeWachtwoord(wachtwoord);
+    }
+
     //Hier start het aanmeldproces
     public static void startAanmeldProces() {
         //Scanner maken
         Scanner scanner = new Scanner(System.in);
 
         //TODO add checker die kijkt of er een gebruiker opgeslagen staat in LokaleTelefoonDatabase en log daarmee in als gegevens kloppen met GebruikersDatabase
+        //Check of huidigeGebruikersnaam in GebruikersDatabase voorkomt
+        if (checkJuisteLogin(LokaleTelefoonDatabase.getHuidigeGebruikersNaam(), LokaleTelefoonDatabase.getHuidigeWachtwoord())) {
+            welkomScherm();
+        }else {
+            //Weergeven aanmeldpagina
+            System.out.println("\n\nWelkom op de aanmeldpagina!\n" +
+                    "1. Login\n" +
+                    "2. Registreren\n" +
+                    "3. Gast login\n\n" +
+                    "0. Afsluiten");
 
-        //Weergeven aanmeldpagina
-        System.out.println("\n\nWelkom op de aanmeldpagina!\n" +
-                "1. Login\n" +
-                "2. Registreren\n" +
-                "3. Gast login\n\n" +
-                "0. Afsluiten");
-
-        //Maken keuze 1. Inloggen   2. Registreren  3. Gast login   0. applicatie sluiten
-        switch (scanner.nextLine()) {
-            case "1": //Login
-                login();
-                break;
-            case "2": //Registreren
-                registreren();
-                break;
-            case "3": //Gast login
-                LokaleTelefoonDatabase.setIsGast(true);
-                welkomScherm();
-                break;
-            case "0": //Afsluiten
-                System.out.println("Tot ziens!");
-                break;
-            case "9": //Geeft de lijst met gebruikers TEST
-                System.out.println("\n\n\n\n\n");
-                GebruikersDatabase.printFullList();
-                System.out.print("\n<Press ENTER to continue>");
-                scanner.nextLine();
-                System.out.println("\n\n\n");
-                startAanmeldProces();
-                break;
-            default:  //Ongeldige invoer
-                System.out.println("Geen geldige invoer. Probeer het opnieuw\n\n");
-                startAanmeldProces(); //Start opnieuw
-                break;
+            //Maken keuze 1. Inloggen   2. Registreren  3. Gast login   0. applicatie sluiten
+            switch (scanner.nextLine()) {
+                case "1": //Login
+                    login();
+                    break;
+                case "2": //Registreren
+                    registreren();
+                    break;
+                case "3": //Gast login
+                    LokaleTelefoonDatabase.setIsGast(true);
+                    welkomScherm();
+                    break;
+                case "0": //Afsluiten
+                    System.out.println("Tot ziens!");
+                    break;
+                case "9": //Geeft de lijst met gebruikers TEST
+                    System.out.println("\n\n\n\n\n");
+                    GebruikersDatabase.printFullList();
+                    System.out.print("\n<Press ENTER to continue>");
+                    scanner.nextLine();
+                    System.out.println("\n\n\n");
+                    startAanmeldProces();
+                    break;
+                default:  //Ongeldige invoer
+                    System.out.println("Geen geldige invoer. Probeer het opnieuw\n\n");
+                    startAanmeldProces(); //Start opnieuw
+                    break;
+            }
         }
     }
 
@@ -145,7 +155,11 @@ public class ProcesAanmelden {
 
     //Welkomsbericht na succesvolle login
     private static void welkomScherm() {
+        Scanner scanner= new Scanner(System.in);
         System.out.printf("\n\n\nWelkom %s in OMW", LokaleTelefoonDatabase.getHuidigeGebruikersNaam());
+        System.out.println("\n\n<Druk op ENTER om uit te loggen>");
+        scanner.nextLine();
+        setHuidigeGebruiker("", "");
     }
     //Hier eindigd het login proces
 

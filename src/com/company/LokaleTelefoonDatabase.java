@@ -1,7 +1,7 @@
 package com.company;
 
 public class LokaleTelefoonDatabase {
-    static Gebruiker huidigeGebruiker = new Gebruiker(null, null, null);
+    static Gebruiker huidigeGebruiker = new Gebruiker("", "", "");
     static String huidigeGebruikersNaam = "";
     static String huidigeWachtwoord = "";
     static String huidigeEmail = "";
@@ -47,8 +47,8 @@ public class LokaleTelefoonDatabase {
         isGast = setisGast;
         if(isGast) {
             huidigeGebruikersNaam = "Gast";
-            huidigeWachtwoord = null;
-            huidigeEmail = null;
+            huidigeWachtwoord = "";
+            huidigeEmail = "";
             huidigeGebruiker = new Gebruiker(huidigeGebruikersNaam, huidigeWachtwoord, huidigeEmail);
         }
     }
